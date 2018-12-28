@@ -1,6 +1,5 @@
 pipeline {
-  agent any
-  node ("App-Builder"){
+  agent { node { label 'App-Builder' } } 
   stages {
     stage('Init') {
       steps {
@@ -38,6 +37,5 @@ pipeline {
         }
       }
     }
-   }  
-}
+  }
 }
