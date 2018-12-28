@@ -16,7 +16,7 @@ pipeline {
         }
       }
       steps {    
-        sh 'cd ui && yarn install'
+        sh 'cd ui && yarn install --frozen-lockfile'
         sh 'cd ui && ng build'        
       }      
     }
