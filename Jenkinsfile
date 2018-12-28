@@ -12,7 +12,6 @@ pipeline {
       agent { 
         docker { 
           image 'ugurkavcu/aws-angular:latest'
-          args '--entrypoint=""'
         }
       }
       steps {    
