@@ -111,7 +111,7 @@
     "variable-name": false,
     "whitespace": [
       true,
-      "check-branch",
+      "check-BRANCH_NAME",
       "check-decl",
       "check-operator",
       "check-separator",
