@@ -12,7 +12,7 @@ pipeline {
       agent { 
         docker { 
           image 'ugurkavcu/aws-angular:latest'
-          args '--entrypoint="" -v /var/jenkins_home/.cache:~/.cache'
+          args '--entrypoint="" -v /var/jenkins_home/.cache:/root/.cache'
         }
       }
       steps {    
