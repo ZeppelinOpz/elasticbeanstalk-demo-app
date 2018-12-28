@@ -16,7 +16,7 @@ pipeline {
       }
       steps {    
         sh 'cd ui && yarn install'
-        sh 'ng build'        
+        sh 'cd ui && ng build'        
       }      
     }
     stage('Build Backend') {
