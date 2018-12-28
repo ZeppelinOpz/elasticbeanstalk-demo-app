@@ -14,7 +14,7 @@ pipeline {
           agent { 
             docker { 
               image 'ugurkavcu/aws-angular:latest'
-              args '--entrypoint="" -v /yarn:/home/node/.cache'
+              args '--entrypoint=""'
             }
           }
           steps {
