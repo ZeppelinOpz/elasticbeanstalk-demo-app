@@ -1,6 +1,7 @@
 pipeline {
   agent any
   stages {
+    node ("App-Builder"){
     stage('Init') {
       steps {
         script {
@@ -12,7 +13,7 @@ pipeline {
       agent { 
         docker { 
           image 'ugurkavcu/aws-angular:latest'
-          args '--entrypoint="" -v /var/jenkins_home/.cache:/home/node/.cache'
+          args '--entrypoint="" -v /root/yarn:/home/node/.cache'
         }
       }
       steps {    
@@ -37,5 +38,6 @@ pipeline {
         }
       }
     }
+   }
   }
 }
