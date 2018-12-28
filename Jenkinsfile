@@ -1,5 +1,5 @@
 pipeline {
-  agent { node { label 'App-Builder' } } 
+  agent any
   stages {
     stage('Init') {
       steps {
@@ -8,34 +8,38 @@ pipeline {
         }       
       }
     }
-    stage('Build Frontend') {
-      agent { 
-        docker { 
-          image 'ugurkavcu/aws-angular:latest'
-          args '--entrypoint="" -v /root/yarn:/home/node/.cache'
+    stage('Build') {
+      stages {
+        stage {
+          agent { 
+            docker { 
+              image 'ugurkavcu/aws-angular:latest'
+              args '--entrypoint="" -v /root/yarn:/home/node/.cache'
+            }
+          }
+          steps {
+            sh 'cd ui && yarn install  --frozen-lockfile --network-timeout=99999'
+            sh 'cd ui && ng build'
+          }
         }
-      }
-      steps {    
-        sh 'cd ui && yarn install  --frozen-lockfile --network-timeout=99999'
-        sh 'cd ui && ng build'        
+        stage {
+          agent { 
+            docker { 
+              image 'docker/compose:1.21.0'
+              args '--entrypoint=""'
+            }
+          }          
+          steps {
+            withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+              sh "docker build . -t goangular-app-${BRANCH_NAME}:${GIT_COMMIT} -f Dockerfile.local"
+              sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
+              sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH_NAME}:latest"
+              sh "docker push ugurkavcu/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
+              sh "docker push ugurkavcu/goangular-app-${BRANCH_NAME}:latest"
+            }            
+          }
+        }
       }      
-    }
-    stage('Build Backend') {
-      agent { 
-        docker { 
-          image 'docker/compose:1.21.0'
-          args '--entrypoint=""'
-        }
-      }
-      steps {
-        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
-          sh "docker build . -t goangular-app-${BRANCH_NAME}:${GIT_COMMIT} -f Dockerfile.local"
-          sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
-          sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH_NAME}:latest"
-          sh "docker push ugurkavcu/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
-          sh "docker push ugurkavcu/goangular-app-${BRANCH_NAME}:latest"
-        }
-      }
     }
   }
 }
