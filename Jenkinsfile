@@ -10,7 +10,7 @@ pipeline {
     }
     stage('Build') {
       stages {
-        stage {
+        stage('Frontend') {
           agent { 
             docker { 
               image 'ugurkavcu/aws-angular:latest'
@@ -22,7 +22,7 @@ pipeline {
             sh 'cd ui && ng build'
           }
         }
-        stage {
+        stage('Backend') {
           agent { 
             docker { 
               image 'docker/compose:1.21.0'
