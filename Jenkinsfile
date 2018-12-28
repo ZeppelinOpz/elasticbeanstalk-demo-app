@@ -16,7 +16,7 @@ pipeline {
         }
       }
       steps {    
-        sh 'cd ui && yarn install --network-timeout=99999'
+        sh 'cd ui && yarn install  --frozen-lockfile --network-timeout=99999'
         sh 'cd ui && ng build'        
       }      
     }
