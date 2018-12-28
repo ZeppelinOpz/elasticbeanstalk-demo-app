@@ -8,18 +8,28 @@ pipeline {
         }       
       }
     }
-    stage('Build') {
+    stage('Build Frontend') {
       agent { 
         docker { 
           image 'ugurkavcu/aws-angular:latest'
           args '--entrypoint=""'
         }
       }
+      steps {    
+        dir('ui') {
+          sh 'ng build'
+        }
+      }      
+    }
+    stage('Build Backend') {
+      agent { 
+        docker { 
+          image 'docker/compose:1.21.0'
+          args '--entrypoint=""'
+        }
+      }
       steps {
-        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') { 
-          dir('ui') {
-            sh 'ng build'
-          }            
+        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
           sh "docker build . -t goangular-app-${BRANCH}:${GIT_COMMIT} -f Dockerfile.local"
           sh "docker tag goangular-app-${BRANCH}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH}:${GIT_COMMIT}"
           sh "docker tag goangular-app-${BRANCH}:${GIT_COMMIT} ugurkavcu/goangular-app-${BRANCH}:latest"
