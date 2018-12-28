@@ -1,7 +1,7 @@
 pipeline {
   agent any
+  node ("App-Builder"){
   stages {
-    node ("App-Builder"){
     stage('Init') {
       steps {
         script {
@@ -38,6 +38,6 @@ pipeline {
         }
       }
     }
-   }
-  }
+   }  
+}
 }
