@@ -1,11 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage('Init') {
-      steps {
-    
-      }
-    }
     stage('Build') {
       stages {
         stage('Backend') {
