@@ -1,5 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    label {
+            label ""
+            customWorkspace "/var/jenkins"
+        }
+  }
+  options {
+    skipDefaultCheckout true
+
+  }
   stages {
     stage('Init') {
       steps {
@@ -14,11 +23,11 @@ pipeline {
           agent { 
             docker { 
               image 'ugurkavcu/aws-angular:latest'
-              args '--entrypoint="" -v /var/jenkins_home/.cache:/home/node/.cache'
+              args '--entrypoint="" -v /var/jenkins/.cache:/home/node/.cache'
             }
           }
           steps {
-            sh 'cd ui && yarn install --frozen-lockfile --network-timeout=99999'
+            sh 'cd ui && yarn install --network-timeout=99999'
             sh 'cd ui && ng build'
           }
         }
