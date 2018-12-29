@@ -52,9 +52,8 @@ pipeline {
               sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
               sh '''
                 aws elasticbeanstalk create-application-version --application-name zeppelinops-demo-app \
-                --version-label master-${GIT_COMMIT} \
-                --source-bundle S3Bucket='zeppelinops-demo-app',S3Key='zeppelinops-demo-app-${GIT_COMMIT}.zip' \                
-                --region us-east-1
+                --version-label "master-${GIT_COMMIT"}" \
+                --source-bundle S3Bucket="zeppelinops-demo-app",S3Key="zeppelinops-demo-app-${GIT_COMMIT}.zip" --region us-east-1
               '''
               sh '''
                 aws elasticbeanstalk update-environment --application-name zeppelinops-demo-app \
