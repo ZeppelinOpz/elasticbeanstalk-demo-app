@@ -2,7 +2,7 @@ pipeline {
   agent {
     label {
             label ""
-            customWorkspace "/var/jenkins"
+            customWorkspace "/var/jenkins/goangular"
         }
   }
   options {
