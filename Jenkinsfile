@@ -37,6 +37,20 @@ pipeline {
             }                        
           }
         }
+        stage('Deploy Production') {
+          agent {
+            docker { 
+              image 'zeppelinops/aws-angular:latest'
+              args '--entrypoint=""'
+            }
+          }          
+          steps {
+            ws("/var/jenkins/goangular") {
+              sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
+              sh "aws s3 ls"
+            }                        
+          }
+        }        
       }      
     }
   }
