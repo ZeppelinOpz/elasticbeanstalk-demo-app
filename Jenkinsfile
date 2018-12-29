@@ -47,7 +47,8 @@ pipeline {
           steps {
             ws("/var/jenkins/goangular") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
-              sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"              
+              sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
               sh "aws s3 mb s3://zeppelinops-demo-app --region us-east-1"
               sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
               sh '''
