@@ -14,7 +14,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=production'
@@ -32,7 +32,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=staging'
@@ -50,7 +50,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=development'
@@ -65,7 +65,7 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
                 sh "docker build . -t goangular-app-${BRANCH_NAME}:${GIT_COMMIT} -f Dockerfile.local"
                 sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} zeppelinops/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
@@ -87,7 +87,7 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
               sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
@@ -117,7 +117,7 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
               sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
@@ -147,7 +147,7 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
               sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
