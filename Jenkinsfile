@@ -57,7 +57,7 @@ pipeline {
               '''
               sh '''
                 aws elasticbeanstalk update-environment --application-name zeppelinops-demo-app \
-                --environment-name production \
+                --environment-name zeppelinops-demo-app-production \
                 --version-label "master-${GIT_COMMIT}" --region us-east-1
               '''               
             }                        
