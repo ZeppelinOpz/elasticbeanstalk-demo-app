@@ -47,7 +47,20 @@ pipeline {
           steps {
             ws("/var/jenkins/goangular") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
-              sh "aws s3 ls"
+              sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"              
+              sh "aws s3 mb s3://zeppelinops-demo-app --region us-east-1"
+              sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
+              sh '''
+                aws elasticbeanstalk create-application-version --application-name zeppelinops-demo-app \
+                --version-label master-${GIT_COMMIT} \
+                --source-bundle S3Bucket="zeppelinops-demo-app",S3Key="zeppelinops-demo-app-${GIT_COMMIT}.zip" \                
+                --region us-east-1
+              '''
+              sh '''
+                aws elasticbeanstalk update-environment --application-name zeppelinops-demo-app \
+                --environment-name production \
+                --version-label master-${GIT_COMMIT} --region us-east-1
+              '''               
             }                        
           }
         }        
