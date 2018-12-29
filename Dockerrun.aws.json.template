@@ -1,12 +1,6 @@
 {
   "AWSEBDockerrunVersion": 2,
-  "volumes": [
-    {
-      "name": "goangular-app",
-      "host": {
-        "sourcePath": "/var/app/current"
-      }
-    },
+  "volumes": [    
     {
       "name": "nginx-proxy-conf",
       "host": {
@@ -19,14 +13,7 @@
       "name": "goangular-app",
       "image": "zeppelinops/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}",
       "essential": true,
-      "memory": 256,
-      "mountPoints": [
-        {
-          "sourceVolume": "goangular-app",
-          "containerPath": "/go/src/app",
-          "readOnly": true
-        }
-      ]
+      "memory": 256
     },
     {
       "name": "nginx-proxy",
@@ -42,12 +29,7 @@
       "links": [
         "goangular-app"
       ],
-      "mountPoints": [
-        {
-          "sourceVolume": "goangular-app",
-          "containerPath": "/var/www/html",
-          "readOnly": true
-        },
+      "mountPoints": [        
         {
           "sourceVolume": "awseb-logs-nginx-proxy",
           "containerPath": "/var/log/nginx"
