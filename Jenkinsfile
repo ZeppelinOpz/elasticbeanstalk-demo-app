@@ -7,13 +7,13 @@ pipeline {
   }
   options {
     skipDefaultCheckout true
-
   }
   stages {
     stage('Init') {
       steps {
         script {
           def GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+          checkout scm
         }       
       }
     }
