@@ -5,9 +5,6 @@ pipeline {
             customWorkspace "/var/jenkins/goangular"
         }
   }
-  options {
-    skipDefaultCheckout true
-  }
   stages {
     stage('Init') {
       steps {
