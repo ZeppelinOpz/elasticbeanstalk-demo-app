@@ -23,7 +23,7 @@
       "mountPoints": [
         {
           "sourceVolume": "goangular-app",
-          "containerPath": "/go/src/goangular-app",
+          "containerPath": "/go/src/app",
           "readOnly": true
         }
       ]
