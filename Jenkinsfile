@@ -1,16 +1,15 @@
 pipeline {
   agent {
     label {
-            label ""
-            customWorkspace "/var/jenkins/goangular"
-        }
+      label ""
+      customWorkspace "/var/jenkins/goangular"
+    }
   }
   stages {
     stage('Init') {
       steps {
         script {
           def GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-          checkout scm
         }       
       }
     }
@@ -18,9 +17,13 @@ pipeline {
       stages {
         stage('Frontend') {
           agent { 
+            label {
+              label ""
+              customWorkspace "/var/jenkins/goangular"
+            }            
             docker { 
               image 'ugurkavcu/aws-angular:latest'
-              args '--entrypoint="" -v /var/jenkins/.cache:/home/node/.cache'
+              args '--entrypoint=""'
             }
           }
           steps {
@@ -30,6 +33,10 @@ pipeline {
         }
         stage('Backend') {
           agent { 
+            label {
+              label ""
+              customWorkspace "/var/jenkins/goangular"
+            }            
             docker { 
               image 'docker/compose:1.21.0'
               args '--entrypoint=""'
