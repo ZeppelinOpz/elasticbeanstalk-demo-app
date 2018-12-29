@@ -1,9 +1,28 @@
 pipeline {
   agent any
-  stages {    
-    stage('Build & Deploy') {
+  stages {
+    stage('Init') {
+      steps {
+        script {
+          def GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+        }       
+      }
+    }
+    stage('Build') {
       stages {
-        stage('Build') {
+        stage('Frontend') {
+          agent { 
+            docker { 
+              image 'ugurkavcu/aws-angular:latest'
+              args '--entrypoint="" -v /var/jenkins_home/.cache:/home/node/.cache'
+            }
+          }
+          steps {
+            sh 'cd ui && yarn install --frozen-lockfile --network-timeout=99999'
+            sh 'cd ui && ng build'
+          }
+        }
+        stage('Backend') {
           agent { 
             docker { 
               image 'docker/compose:1.21.0'
