@@ -3,7 +3,10 @@ pipeline {
   stages {
     stage('Build') {
       stages {
-        stage('Frontend') {
+        stage('Frontend-Prod') {          
+          when {
+            branch 'master'
+          }
           agent { 
             docker { 
               image 'zeppelinops/aws-angular:latest'
@@ -14,10 +17,46 @@ pipeline {
             ws("/var/jenkins/goangular") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
-              sh 'cd ui && ng build'
+              sh 'cd ui && ng build --configuration=production'
             }
           }
-        }        
+        } 
+        stage('Frontend-Staging') {          
+          when {
+            branch 'staging'
+          }
+          agent { 
+            docker { 
+              image 'zeppelinops/aws-angular:latest'
+              args '--entrypoint="" -v /var/jenkins_home/.cache:/home/node/.cache'
+            }
+          }
+          steps {
+            ws("/var/jenkins/goangular") {
+              checkout scm                      
+              sh 'cd ui && yarn install --network-timeout=99999'
+              sh 'cd ui && ng build --configuration=staging'
+            }
+          }
+        }
+        stage('Frontend-Development') {          
+          when {
+            branch 'development'
+          }
+          agent { 
+            docker { 
+              image 'zeppelinops/aws-angular:latest'
+              args '--entrypoint="" -v /var/jenkins_home/.cache:/home/node/.cache'
+            }
+          }
+          steps {
+            ws("/var/jenkins/goangular") {
+              checkout scm                      
+              sh 'cd ui && yarn install --network-timeout=99999'
+              sh 'cd ui && ng build --configuration=development'
+            }
+          }
+        }                 
         stage('Backend') {
           agent {
             docker { 

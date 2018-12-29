@@ -17,13 +17,13 @@
   "containerDefinitions": [
     {
       "name": "goangular-app",
-      "image": "zeppelinops/goangular-app-${BRANCH_NAME}",
+      "image": "zeppelinops/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}",
       "essential": true,
       "memory": 256,
       "mountPoints": [
         {
           "sourceVolume": "goangular-app",
-          "containerPath": "/go/src/app",
+          "containerPath": "/go/src/goangular-app",
           "readOnly": true
         }
       ]
