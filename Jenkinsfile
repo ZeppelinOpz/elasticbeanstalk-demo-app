@@ -53,7 +53,7 @@ pipeline {
               sh '''
                 aws elasticbeanstalk create-application-version --application-name zeppelinops-demo-app \
                 --version-label master-${GIT_COMMIT} \
-                --source-bundle S3Bucket="zeppelinops-demo-app",S3Key="zeppelinops-demo-app-${GIT_COMMIT}.zip" \                
+                --source-bundle S3Bucket='zeppelinops-demo-app',S3Key='zeppelinops-demo-app-${GIT_COMMIT}.zip' \                
                 --region us-east-1
               '''
               sh '''
