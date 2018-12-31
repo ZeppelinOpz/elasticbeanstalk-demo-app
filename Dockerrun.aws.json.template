@@ -1,6 +1,12 @@
 {
   "AWSEBDockerrunVersion": 2,
-  "volumes": [    
+  "volumes": [
+    {
+      "name": "frontend",
+      "host": {
+        "sourcePath": "/var/app/current/ui/dist/goangular-app"
+      }
+    },    
     {
       "name": "nginx-proxy-conf",
       "host": {
@@ -29,7 +35,11 @@
       "links": [
         "goangular-app"
       ],
-      "mountPoints": [        
+      "mountPoints": [ 
+        {
+          "sourceVolume": "frontend",
+          "containerPath": "/var/www/html"
+        },       
         {
           "sourceVolume": "awseb-logs-nginx-proxy",
           "containerPath": "/var/log/nginx"

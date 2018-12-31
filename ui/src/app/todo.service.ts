@@ -7,19 +7,19 @@ export class TodoService {
   constructor(private httpClient: HttpClient) {}
 
   getTodoList() {
-    return this.httpClient.get(environment.gateway + '/todo');
+    return this.httpClient.get(environment.gateway + '/api/todo');
   }
 
   addTodo(todo: Todo) {
-    return this.httpClient.post(environment.gateway + '/todo', todo);
+    return this.httpClient.post(environment.gateway + '/api/todo', todo);
   }
 
   completeTodo(todo: Todo) {
-    return this.httpClient.put(environment.gateway + '/todo', todo);
+    return this.httpClient.put(environment.gateway + '/api/todo', todo);
   }
 
   deleteTodo(todo: Todo) {
-    return this.httpClient.delete(environment.gateway + '/todo/' + todo.id);
+    return this.httpClient.delete(environment.gateway + '/api/todo/' + todo.id);
   }
 }
 
