@@ -14,7 +14,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=production'
@@ -32,7 +32,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=staging'
@@ -50,7 +50,7 @@ pipeline {
             }
           }
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               checkout scm                      
               sh 'cd ui && yarn install --network-timeout=99999'
               sh 'cd ui && ng build --configuration=development'
@@ -65,9 +65,9 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
-                sh "docker build . -t goangular-app-${BRANCH_NAME}:${GIT_COMMIT} -f Dockerfile.local"
+                sh "docker build . -t goangular-app-${BRANCH_NAME}:${GIT_COMMIT} -f Dockerfile.app"
                 sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} zeppelinops/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
                 sh "docker tag goangular-app-${BRANCH_NAME}:${GIT_COMMIT} zeppelinops/goangular-app-${BRANCH_NAME}:latest"
                 sh "docker push zeppelinops/goangular-app-${BRANCH_NAME}:${GIT_COMMIT}"
@@ -87,10 +87,11 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
-              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip ui/dist/goangular-app"              
               sh "aws s3 mb s3://zeppelinops-demo-app --region us-east-1"
               sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
               sh '''
@@ -117,10 +118,11 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
-              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip ui/dist/goangular-app"                
               sh "aws s3 mb s3://zeppelinops-demo-app --region us-east-1"
               sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
               sh '''
@@ -147,10 +149,11 @@ pipeline {
             }
           }          
           steps {
-            ws("/var/jenkins/goangular-${BRANCH_NAME}") {
+            ws("/var/jenkins/goangular-${BRANCH_NAME}-${GIT_COMMIT}") {
               sh "envsubst < Dockerrun.aws.json.template > Dockerrun.aws.json"
               sh "zip -r -j zeppelinops-demo-app-${GIT_COMMIT}.zip Dockerrun.aws.json"
-              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"              
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip proxy/*"
+              sh "zip -r zeppelinops-demo-app-${GIT_COMMIT}.zip ui/dist/goangular-app"                
               sh "aws s3 mb s3://zeppelinops-demo-app --region us-east-1"
               sh "aws s3 cp zeppelinops-demo-app-${GIT_COMMIT}.zip s3://zeppelinops-demo-app --region us-east-1"  
               sh '''
